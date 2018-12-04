@@ -25,7 +25,7 @@ public class DexFieldCounts extends DexCount {
     }
 
     @Override
-    public void generate(DexData dexData, boolean includeClasses, String packageFilter, int maxDepth, Filter filter) {
+    public void generate(DexData dexData, boolean includeClasses, boolean includeDetail, String packageFilter, int maxDepth, Filter filter) {
         FieldRef[] fieldRefs = getFieldRefs(dexData, filter);
 
         for (FieldRef fieldRef : fieldRefs) {

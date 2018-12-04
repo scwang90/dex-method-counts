@@ -28,7 +28,7 @@ public class DexMethodCounts extends DexCount {
     }
 
     @Override
-    public void generate(DexData dexData, boolean includeClasses, String packageFilter, int maxDepth, Filter filter) {
+    public void generate(DexData dexData, boolean includeClasses, boolean includeDetail, String packageFilter, int maxDepth, Filter filter) {
         MethodRef[] methodRefs = getMethodRefs(dexData, filter);
 
         for (MethodRef methodRef : methodRefs) {
@@ -61,6 +61,24 @@ public class DexMethodCounts extends DexCount {
                     }
                 }
                 packageNode.count++;
+
+                if(includeDetail) {
+                    String methodName = methodRef.getName();
+                    if (packageNode.children.containsKey(methodName)) {
+                        packageNode = packageNode.children.get(methodName);
+                    } else {
+                        Node childNode = new Node();
+                        if (methodName.length() == 0) {
+                            // This method is declared in a class that is part of the default package.
+                            // Typical examples are methods that operate on arrays of primitive data types.
+                            methodName = "<default>";
+                        }
+                        packageNode.children.put(methodName, childNode);
+                        packageNode = childNode;
+                    }
+                    packageNode.count++;
+                }
+
             } else if (outputStyle == OutputStyle.FLAT) {
                 IntHolder count = packageCount.get(packageName);
                 if (count == null) {

@@ -32,6 +32,7 @@ import java.util.zip.ZipFile;
 public class Main {
     private boolean countFields;
     private boolean includeClasses;
+    private boolean includeDetail;
     private String packageFilter;
     private int maxDepth = Integer.MAX_VALUE;
     private DexMethodCounts.Filter filter = DexMethodCounts.Filter.ALL;
@@ -59,7 +60,7 @@ public class Main {
                 for (RandomAccessFile dexFile : dexFiles) {
                     DexData dexData = new DexData(dexFile);
                     dexData.load();
-                    counts.generate(dexData, includeClasses, packageFilter, maxDepth, filter);
+                    counts.generate(dexData, includeClasses, includeDetail, packageFilter, maxDepth, filter);
                     dexFile.close();
                 }
                 counts.output();
@@ -169,6 +170,8 @@ public class Main {
                 countFields = true;
             } else if (arg.equals("--include-classes")) {
                 includeClasses = true;
+            } else if (arg.equals("--include-detail")) {
+                includeDetail = true;
             } else if (arg.startsWith("--package-filter=")) {
                 packageFilter = arg.substring(arg.indexOf('=') + 1);
             } else if (arg.startsWith("--max-depth=")) {
